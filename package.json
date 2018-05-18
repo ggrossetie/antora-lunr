@@ -1,0 +1,27 @@
+{
+  "name": "antora-lunr",
+  "version": "1.0.1",
+  "description": "Generate a Lunr index from a catalog.",
+  "license": "MIT",
+  "author": "Guillaume Grossetie <g.grossetie@gmail.com>",
+  "homepage": "https://antora.org",
+  "repository": "https://github.com/Mogztter/antora-lunr",
+  "bugs": {
+    "url": "https://github.com/Mogztter/antora-lunr/issues"
+  },
+  "main": "lib/index.js",
+  "engines": {
+    "node": ">= 8.0.0"
+  },
+  "files": [
+    "lib/"
+  ],
+  "keywords": [
+    "antora",
+    "antora-component",
+    "lunr"
+  ],
+  "dependencies": {
+    "lunr": "^2.2.0"
+  }
+}
