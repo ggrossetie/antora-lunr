@@ -13,6 +13,10 @@
   "engines": {
     "node": ">= 8.0.0"
   },
+  "scripts": {
+    "lint": "eslint lib",
+    "test": "mocha"
+  },
   "files": [
     "lib/"
   ],
@@ -23,11 +27,18 @@
   ],
   "dependencies": {
     "html-entities": "^1.2.1",
-    "lunr": "^2.2.0"
+    "lunr": "^2.2.0",
+    "cheerio": "^1.0.0-rc.2"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.1.0"
   }
 }
