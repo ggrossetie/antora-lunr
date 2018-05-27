@@ -1,3 +1,45 @@
 = Integration of Lunr in Antora
 
+== Usage
 
+=== Generate an index file
+
+[NOTE]
+====
+Since Antora does not yet provide an option to specify a custom site generator,
+you will need to modify the default pipeline in `node_modules`.
+
+Once https://gitlab.com/antora/antora/issues/178 will be resolved you will be able to load your custom pipeline.
+====
+
+To integrate Lunr in Antora, install the default pipeline `@antora/site-generator-default` and edit the file `node_modules/@antora/site-generator-default`:
+
+```js
+const generateIndex = require('antora-lunr')
+```
+
+In the `generateSite` function add the following two lines after `const siteFiles = mapSite(playbook, pages).concat(produceRedirects(playbook, contentCatalog))`:
+
+```js
+const index = generateIndex(playbook, pages)
+siteFiles.push(generateIndex.createIndexFile(index))
+```
+
+When generating your documentation site again, an index file should be created in the output directory `build/site/search_index.json`.
+
+=== Enable the search component in the UI
+
+Now that we have a `search_index.json`, we need to enable the search component in the UI.
+
+. Update the URL of the UI bundle ZIP archive in your playbook file:
++
+```yml
+ui:
+  bundle:
+    url: https://gitlab.com/g.grossetie/antora-ui-default/-/jobs/artifacts/lunr-integration/raw/build/ui-bundle.zip?job=bundle-dev
+```
+. Generate your documentation site with the following environment variables:
++
+```
+DOCSEARCH_ENABLED=true DOCSEARCH_ENGINE=lunr antora site.yml
+```
