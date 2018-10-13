@@ -6,13 +6,10 @@
 
 [NOTE]
 ====
-Since Antora does not yet provide an option to specify a custom site generator,
-you will need to modify the default pipeline in `node_modules`.
-
-Once https://gitlab.com/antora/antora/issues/178 will be resolved you will be able to load your custom pipeline.
+Antora does provide an option to specify a custom site generator, but you can also simply modify the default pipeline in `node_modules` (see https://gitlab.com/antora/antora/issues/178[#178] for details) as this example shows.
 ====
 
-To integrate Lunr in Antora, install the default pipeline `@antora/site-generator-default` and edit the file `node_modules/@antora/site-generator-default`:
+To integrate Lunr in Antora, install the default pipeline `@antora/site-generator-default` and edit the file `node_modules/@antora/site-generator-default/lib/generate-site.js` adding after `use strict`:
 
 ```js
 const generateIndex = require('antora-lunr')
@@ -25,21 +22,45 @@ const index = generateIndex(playbook, pages)
 siteFiles.push(generateIndex.createIndexFile(index))
 ```
 
-When generating your documentation site again, an index file should be created in the output directory `build/site/search_index.json`.
+Install this module:
+
+`npm install antora-lunr`
+
+When generating your documentation site again, an index file should be created in the output directory `public/search_index.json`.
 
 === Enable the search component in the UI
 
 Now that we have a `search_index.json`, we need to enable the search component in the UI.
 
-. Update the URL of the UI bundle ZIP archive in your playbook file:
+Update the URL of the UI bundle ZIP archive in your playbook file:
 +
 ```yml
 ui:
   bundle:
     url: https://gitlab.com/g.grossetie/antora-ui-default/-/jobs/artifacts/lunr-integration/raw/build/ui-bundle.zip?job=bundle-dev
 ```
-. Generate your documentation site with the following environment variables:
-+
+
+NOTE: For this to function correctly you must provide the `site.url` key in your playbook file. See the Antora docs on the https://docs.antora.org/antora/1.1/playbook/playbook-schema/[playbook schema]. If using the site locally (not serving from a webserver) then you can set your `site.url` to a `file://` reference, e.g. `file:///home/Documents/Antora/my-website/public/`
+
+=== Generate the site
+
+Generate your documentation site with the following environment variables:
+
+[none]
+* `DOCSEARCH_ENABLED=true`
+* `DOCSEARCH_ENGINE=lunr`
+
+For instance, as a command line:
+
 ```
 DOCSEARCH_ENABLED=true DOCSEARCH_ENGINE=lunr antora site.yml
 ```
+
+[NOTE]
+--
+Cross-origin browser security may prevent access to the `search_index.json` file. This can be disabled but should be only be http://testingfreak.com/how-to-fix-cross-origin-request-security-cors-error-in-firefox-chrome-and-ie/[done temporarily] during development as it opens a significant security hole
+--
+
+=== Testing this module
+
+In the root of the repository, run `npm test`.
