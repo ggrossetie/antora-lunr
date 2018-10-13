@@ -32,7 +32,7 @@ When generating your documentation site again, an index file should be created i
 
 Now that we have a `search_index.json`, we need to enable the search component in the UI.
 
-. Update the URL of the UI bundle ZIP archive in your playbook file:
+Update the URL of the UI bundle ZIP archive in your playbook file:
 +
 ```yml
 ui:
