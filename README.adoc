@@ -22,14 +22,9 @@ const index = generateIndex(playbook, pages)
 siteFiles.push(generateIndex.createIndexFile(index))
 ```
 
-Clone this repository in the `node_modules` folder:
+Install this module:
 
-`git clone https://github.com/Mogztter/antora-lunr`
-
-Go to this folder and install the dependencies in the `node_modules` folder:
-
-`cd antora-lunr`
-`npm install`
+`npm install antora-lunr`
 
 When generating your documentation site again, an index file should be created in the output directory `public/search_index.json`.
 
