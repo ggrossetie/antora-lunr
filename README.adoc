@@ -4,12 +4,31 @@
 
 === Generate an index file
 
+To integrate Lunr in Antora, we need to modify the site generator pipeline.
+
 [NOTE]
 ====
-Antora does provide an option to specify a custom site generator, but you can also simply modify the default pipeline in `node_modules` (see https://gitlab.com/antora/antora/issues/178[#178] for details) as this example shows.
+The following instructions only apply if you are using the default pipeline.
+If you are using a custom pipeline, the logic remains the same but you will have to find yourself where the `generateSite` function should be added.
 ====
 
-To integrate Lunr in Antora, install the default pipeline `@antora/site-generator-default` and edit the file `node_modules/@antora/site-generator-default/lib/generate-site.js` adding after `use strict`:
+Antora provides a default pipeline named `@antora/site-generator-default`.
+Make sure that it's installed using the command `npm list --depth 0`.
+If you don't find the module in the result then it's probably installed globally.
+Add the `-g` flag and execute the command again:
+
+```
+npm list -g --depth 0
+/usr/local/lib
+├── @antora/cli@2.0.0
+├── @antora/site-generator-default@2.0.0
+└── npm@6.5.0
+```
+
+As you can see in the example above, the module is installed globally in [.path]_/usr/local/lib_.
+The `node_modules` folder will be either at the root of your project or in your global libraries folder: [.path]._/usr/local/lib/node_modules_.
+
+Once you've located the module, edit the file `node_modules/@antora/site-generator-default/lib/generate-site.js` adding after `use strict`:
 
 ```js
 const generateIndex = require('antora-lunr')
@@ -24,7 +43,15 @@ siteFiles.push(generateIndex.createIndexFile(index))
 
 Install this module:
 
-`npm install antora-lunr`
+ npm i antora-lunr
+
+[NOTE]
+====
+If Antora is installed globally, you should also add this module globally using the `-g` flag:
+
+  npm i -g antora-lunr
+
+====
 
 When generating your documentation site again, an index file should be created in the output directory `public/search_index.json`.
 
@@ -33,7 +60,7 @@ When generating your documentation site again, an index file should be created i
 Now that we have a `search_index.json`, we need to enable the search component in the UI.
 
 Update the URL of the UI bundle ZIP archive in your playbook file:
-+
+
 ```yml
 ui:
   bundle:
@@ -57,9 +84,12 @@ DOCSEARCH_ENABLED=true DOCSEARCH_ENGINE=lunr antora site.yml
 ```
 
 [NOTE]
---
-Cross-origin browser security may prevent access to the `search_index.json` file. This can be disabled but should be only be http://testingfreak.com/how-to-fix-cross-origin-request-security-cors-error-in-firefox-chrome-and-ie/[done temporarily] during development as it opens a significant security hole
---
+====
+Cross-origin browser security may prevent access to the `search_index.json` file.
+This can be disabled but should be only be http://testingfreak.com/how-to-fix-cross-origin-request-security-cors-error-in-firefox-chrome-and-ie/[done temporarily] during development as it opens a significant security hole.
+
+It's recommended to use a local HTTP server to view your site locally using for instance https://www.npmjs.com/package/serve[serve].
+====
 
 === Testing this module
 
