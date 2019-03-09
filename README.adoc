@@ -53,13 +53,17 @@ If Antora is installed globally, you should also add this module globally using 
 
 ====
 
-When generating your documentation site again, an index file should be created in the output directory `public/search_index.json`.
+When generating your documentation site again, an index file will be created at the root of your output directory,
+which depends on the value of `output.dir` in your playbook.
+For the https://docs.antora.org/antora/2.0/playbook/configure-output/#default-output-dir[default output dir],
+that will be `build/site/search_index.json`.
 
 === Enable the search component in the UI
 
 Now that we have a `search_index.json`, we need to enable the search component in the UI.
 
-Update the URL of the UI bundle ZIP archive in your playbook file:
+To get the necessary https://docs.antora.org/antora/2.0/playbook/configure-ui/#ui-bundle[UI bundle ZIP archive],
+use the following URL in your playbook file:
 
 ```yml
 ui:
@@ -68,6 +72,9 @@ ui:
 ```
 
 NOTE: For this to function correctly you must provide the `site.url` key in your playbook file. See the Antora docs on the https://docs.antora.org/antora/1.1/playbook/playbook-schema/[playbook schema]. If using the site locally (not serving from a webserver) then you can set your `site.url` to a `file://` reference, e.g. `file:///home/Documents/Antora/my-website/public/`
+
+TIP: If you are using https://www.npmjs.com/package/serve[serve] HTTP server to view your site locally,
+set the `site.url` to `http://localhost:5000`.
 
 === Generate the site
 
