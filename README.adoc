@@ -26,7 +26,7 @@ npm list -g --depth 0
 ```
 
 As you can see in the example above, the module is installed globally in [.path]_/usr/local/lib_.
-The `node_modules` folder will be either at the root of your project or in your global libraries folder: [.path]._/usr/local/lib/node_modules_.
+The `node_modules` folder will be either at the root of your project or in your global libraries folder: [.path]_/usr/local/lib/node_modules_.
 
 Once you've located the module, edit the file `node_modules/@antora/site-generator-default/lib/generate-site.js` adding after `use strict`:
 
