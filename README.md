@@ -1,23 +1,20 @@
-= Integration of Lunr in Antora
-:idprefix:
-:idseparator: -
+# Integration of Lunr in Antora
 
-//ifdef::env-github[]
-image:https://travis-ci.org/Mogztter/antora-lunr.svg?branch=master["Build Status", link="https://travis-ci.org/Mogztter/antora-lunr"]
-image:https://img.shields.io/npm/v/antora-lunr.svg[npm version, link=https://www.npmjs.org/package/antora-lunr]
-//endif::[]
+[![Build Status](https://travis-ci.org/Mogztter/antora-lunr.svg?branch=master)](https://travis-ci.org/Mogztter/antora-lunr)
+[![Build Status](https://img.shields.io/npm/v/antora-lunr.svg)](https://www.npmjs.org/package/antora-lunr)
 
-== Usage
+[Lunr](https://lunrjs.com/) provides a great search experience without the need for external, server-side, search services.
+It makes it possible to add an *offline* search engine in your Antora's documentation site.
+ 
+## Usage
 
-=== Generate an index file
+### Generate an index file
 
 To integrate Lunr in Antora, we need to modify the site generator pipeline.
 
-[NOTE]
-====
+**NOTE:**
 The following instructions only apply if you are using the default pipeline.
 If you are using a custom pipeline, the logic remains the same but you will have to find yourself where the `generateSite` function should be added.
-====
 
 Antora provides a default pipeline named `@antora/site-generator-default`.
 Make sure that it's installed using the command `npm list --depth 0`.
@@ -32,8 +29,8 @@ npm list -g --depth 0
 └── npm@6.5.0
 ```
 
-As you can see in the example above, the module is installed globally in [.path]_/usr/local/lib_.
-The `node_modules` folder will be either at the root of your project or in your global libraries folder: [.path]_/usr/local/lib/node_modules_.
+As you can see in the example above, the module is installed globally in _/usr/local/lib_.
+The `node_modules` folder will be either at the root of your project or in your global libraries folder: _/usr/local/lib/node_modules_.
 
 Once you've located the module, edit the file `node_modules/@antora/site-generator-default/lib/generate-site.js` adding after `use strict`:
 
@@ -50,26 +47,27 @@ siteFiles.push(generateIndex.createIndexFile(index))
 
 Install this module:
 
- npm i antora-lunr
+```console
+$ npm i antora-lunr
+```
 
-[NOTE]
-====
+**NOTE**:
 If Antora is installed globally, you should also add this module globally using the `-g` flag:
 
-  npm i -g antora-lunr
-
-====
+```console
+$ npm i -g antora-lunr
+```
 
 When generating your documentation site again, an index file will be created at the root of your output directory,
 which depends on the value of `output.dir` in your playbook.
-For the https://docs.antora.org/antora/2.0/playbook/configure-output/#default-output-dir[default output dir],
+For the [default output dir](https://docs.antora.org/antora/2.0/playbook/configure-output/#default-output-dir),
 that will be `build/site/search_index.json`.
 
-=== Enable the search component in the UI
+### Enable the search component in the UI
 
 Now that we have a `search_index.json`, we need to enable the search component in the UI.
 
-To get the necessary https://docs.antora.org/antora/2.0/playbook/configure-ui/#ui-bundle[UI bundle ZIP archive],
+To get the necessary [UI bundle ZIP archive](https://docs.antora.org/antora/2.0/playbook/configure-ui/#ui-bundle),
 use the following URL in your playbook file:
 
 ```yml
@@ -78,33 +76,33 @@ ui:
     url: https://gitlab.com/g.grossetie/antora-ui-default/-/jobs/artifacts/lunr-integration/raw/build/ui-bundle.zip?job=bundle-dev
 ```
 
-NOTE: For this to function correctly you must provide the `site.url` key in your playbook file. See the Antora docs on the https://docs.antora.org/antora/1.1/playbook/playbook-schema/[playbook schema]. If using the site locally (not serving from a webserver) then you can set your `site.url` to a `file://` reference, e.g. `file:///home/Documents/Antora/my-website/public/`
+**NOTE:** For this to function correctly you must provide the `site.url` key in your playbook file.
+See the Antora docs on the [playbook schema](https://docs.antora.org/antora/1.1/playbook/playbook-schema/).
+If using the site locally (not serving from a webserver) then you can set your `site.url` to a `file://` reference, e.g. `file:///home/documents/antora/website/public/`.
 
-TIP: If you are using https://www.npmjs.com/package/serve[serve] HTTP server to view your site locally,
+**TIP:** If you are using [serve](https://www.npmjs.com/package/serve) HTTP server to view your site locally,
 set the `site.url` to `http://localhost:5000`.
 
-=== Generate the site
+### Generate the site
 
 Generate your documentation site with the following environment variables:
 
-[none]
 * `DOCSEARCH_ENABLED=true`
 * `DOCSEARCH_ENGINE=lunr`
 
 For instance, as a command line:
 
-```
-DOCSEARCH_ENABLED=true DOCSEARCH_ENGINE=lunr antora site.yml
+```console
+$ DOCSEARCH_ENABLED=true DOCSEARCH_ENGINE=lunr antora site.yml
 ```
 
-[NOTE]
-====
+**NOTE:**
 Cross-origin browser security may prevent access to the `search_index.json` file.
-This can be disabled but should be only be http://testingfreak.com/how-to-fix-cross-origin-request-security-cors-error-in-firefox-chrome-and-ie/[done temporarily] during development as it opens a significant security hole.
+This can be disabled but should be only be [done temporarily](http://testingfreak.com/how-to-fix-cross-origin-request-security-cors-error-in-firefox-chrome-and-ie/) during development as it opens a significant security hole.
 
-It's recommended to use a local HTTP server to view your site locally using for instance https://www.npmjs.com/package/serve[serve].
-====
+It's recommended to use a local HTTP server to view your site locally using for instance [serve](https://www.npmjs.com/package/serve).
 
-=== Testing this module
+
+### Testing this module
 
 In the root of the repository, run `npm test`.
