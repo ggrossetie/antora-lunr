@@ -2,7 +2,7 @@
 const chai = require('chai')
 const expect = chai.expect
 const dirtyChai = require('dirty-chai')
-chai.use(dirtyChai);
+chai.use(dirtyChai)
 const generateIndex = require('../lib/index')
 
 describe('Generate index', function () {
@@ -53,7 +53,7 @@ describe('Generate index', function () {
       }
     }]
     const index = generateIndex(playbook, pages)
-    const installPage = index.store['https://antora.org/component-a/install-foo'];
+    const installPage = index.store['https://antora.org/component-a/install-foo']
     expect(installPage.text).to.equal('foo')
     expect(installPage.component).to.equal('component-a')
     expect(installPage.version).to.equal('2.0')
@@ -93,7 +93,7 @@ describe('Generate index', function () {
       }
     }]
     const index = generateIndex(playbook, pages)
-    const installPage = index.store['https://docs.antora.org/antora/1.0/'];
+    const installPage = index.store['https://docs.antora.org/antora/1.0/']
     expect(installPage.text).to.equal('The Static Site Generator for Tech Writers This site hosts the technical documentation for Antora With Antora, you manage docs as code')
     expect(installPage.component).to.equal('hello')
     expect(installPage.version).to.equal('1.0')
