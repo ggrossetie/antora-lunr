@@ -17,9 +17,9 @@ describe('Generate index', function () {
     const index = generateIndex(playbook, pages)
     expect(index).to.be.empty()
   })
-  it('should generate an empty index when there\'s no url', function () {
+  it('should use relative links when site URL is not define', function () {
     const playbook = {
-      site: {} // no site url, no index!
+      site: {} // site.url is undefined
     }
     const pages = [{
       contents: Buffer.from('foo'),
@@ -33,7 +33,7 @@ describe('Generate index', function () {
       }
     }]
     const index = generateIndex(playbook, pages)
-    expect(index).to.be.empty()
+    expect(index.store['/component-a/install-foo'].url).to.equal('/component-a/install-foo')
   })
   it('should generate an index', function () {
     const playbook = {
@@ -42,7 +42,7 @@ describe('Generate index', function () {
       }
     }
     const pages = [{
-      contents: Buffer.from('<p>foo</p>'),
+      contents: Buffer.from('<article class="doc"><p>foo</p></article>'),
       src: {
         component: 'component-a',
         version: '2.0',
@@ -72,7 +72,8 @@ describe('Generate index', function () {
       }
     }
     const pages = [{
-      contents: Buffer.from(`<h1>Antora Documentation</h1>
+      contents: Buffer.from(`<article class="doc">
+<h1>Antora Documentation</h1>
 <p>The Static Site Generator for Tech Writers</p>
 <p>This site hosts the technical documentation for Antora</p>
 <h2 id="manage-docs-as-code">Manage docs as code</h2>
@@ -80,7 +81,8 @@ describe('Generate index', function () {
 <h3 id="where-to-begin">Where to begin</h3>
 <h4 id="navigation">Navigation</h4>
 <h5 id="link-types-syntax">Link Types & Syntax</h5>
-<h6 id="page-links">Page Links</h6>`),
+<h6 id="page-links">Page Links</h6>
+</article>`),
       src: {
         component: 'hello',
         version: '1.0',
