@@ -151,7 +151,5 @@ describe('Generate index', function () {
     expect(installPage.title).to.equal('Antora Documentation')
     expect(index.index.search('asciidoctor'), '"Asciidoctor" is a navigation title and should not be indexed').to.have.lengthOf(0)
     expect(index.index.search('help'), '"How Antora Can Help" is a navigation item and should not be indexed').to.have.lengthOf(0)
-
-
   })
 })
