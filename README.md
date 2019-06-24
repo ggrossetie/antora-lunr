@@ -61,19 +61,20 @@ $ npm i -g antora-lunr
 When generating your documentation site again, an index file will be created at the root of your output directory,
 which depends on the value of `output.dir` in your playbook.
 For the [default output dir](https://docs.antora.org/antora/2.0/playbook/configure-output/#default-output-dir),
-that will be `build/site/search_index.json`.
+that will be `build/site/search_index.json.gz`.
 
 ### Enable the search component in the UI
 
-Now that we have a `search_index.json`, we need to enable the search component in the UI.
+Now that we have a `search_index.json.gz`, we need to enable the search component in the UI.
 
-To get the necessary [UI bundle ZIP archive](https://docs.antora.org/antora/2.0/playbook/configure-ui/#ui-bundle),
-use the following URL in your playbook file:
+Copy the `supplemental_ui` directory in your Antora playbook repository and configure a `supplemental_files`:
 
 ```yml
 ui:
   bundle:
-    url: https://gitlab.com/g.grossetie/antora-ui-default/-/jobs/artifacts/lunr-integration/raw/build/ui-bundle.zip?job=bundle-dev
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+  supplemental_files: ./supplemental_ui
 ```
 
 **NOTE:** For this to function correctly you must provide the `site.url` key in your playbook file.
@@ -97,7 +98,7 @@ $ DOCSEARCH_ENABLED=true DOCSEARCH_ENGINE=lunr antora site.yml
 ```
 
 **NOTE:**
-Cross-origin browser security may prevent access to the `search_index.json` file.
+Cross-origin browser security may prevent access to the `search_index.json.gz` file.
 This can be disabled but should be only be [done temporarily](http://testingfreak.com/how-to-fix-cross-origin-request-security-cors-error-in-firefox-chrome-and-ie/) during development as it opens a significant security hole.
 
 It's recommended to use a local HTTP server to view your site locally using for instance [serve](https://www.npmjs.com/package/serve).
