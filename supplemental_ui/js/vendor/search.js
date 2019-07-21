@@ -5,35 +5,6 @@ window.antoraLunr = (function (lunr) {
   searchResult.classList.add('search-result-dropdown-menu')
   searchInput.parentNode.appendChild(searchResult)
 
-  function buffer2str (buf) {
-    var a16 = new Uint16Array(buf.buffer)
-    var str = ''
-    for (var i = 0; i < a16.length; ++i) {
-      str += String.fromCharCode(a16[i])
-    }
-    return str
-  }
-
-  // take the compressed index and convert it to an object
-  function decompress (str) {
-    return JSON.parse(buffer2str(pako.inflate(str)))
-  }
-
-  function loadIndex (searchIndexPath, callback) {
-    var xhr = new XMLHttpRequest()
-    xhr.open('GET', searchIndexPath)
-    xhr.responseType = 'arraybuffer'
-    xhr.onload = function () {
-      if (xhr.status === 200 || xhr.status === 0) {
-        var json = decompress(xhr.response)
-        callback(Object.assign({index: lunr.Index.load(json.index), store: json.store}))
-      } else {
-        console.log('Unable to activate the search with Lunr because the index file is missing.')
-      }
-    }
-    xhr.send()
-  }
-
   function highlightText (doc, position) {
     var hits = []
     var start = position[0]
@@ -196,14 +167,13 @@ window.antoraLunr = (function (lunr) {
     }
   }
 
-  function init (searchIndexPath) {
-    loadIndex(searchIndexPath, function (index) {
-      var search = debounce(function () {
-        searchIndex(index.index, index.store, searchInput.value)
-      }, 100)
-      // TODO listen to blur, focus and input events
-      searchInput.addEventListener('keydown', search)
-    })
+  function init (data) {
+    var index = Object.assign({index: lunr.Index.load(data.index), store: data.store})
+    var search = debounce(function () {
+      searchIndex(index.index, index.store, searchInput.value)
+    }, 100)
+    // TODO listen to blur, focus and input events
+    searchInput.addEventListener('keydown', search)
   }
 
   return {
