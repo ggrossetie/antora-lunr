@@ -28,8 +28,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "html-entities": "^1.2.1",
-    "lunr": "2.3.3",
-    "pako": "^1.0.10"
+    "lunr": "2.3.3"
   },
   "devDependencies": {
     "chai": "^4.1.2",

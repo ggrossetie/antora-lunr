@@ -6,9 +6,8 @@
 <script src="{{uiRootPath}}/js/site.js"></script>
 {{#if (eq env.DOCSEARCH_ENGINE 'lunr')}}
 <script src="{{uiRootPath}}/js/vendor/lunr.js"></script>
-<script src="{{uiRootPath}}/js/vendor/pako.min.js"></script>
 <script src="{{uiRootPath}}/js/vendor/search.js"></script>
-<script>antoraLunr.init("{{uiRootPath}}/../search_index.json.gz")</script>
+<script async src="{{uiRootPath}}/../search-index.js"></script>
 {{/if}}
 <script src="{{uiRootPath}}/js/vendor/highlight.js"></script>
 <script>hljs.initHighlighting()</script>

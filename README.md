@@ -61,11 +61,11 @@ $ npm i -g antora-lunr
 When generating your documentation site again, an index file will be created at the root of your output directory,
 which depends on the value of `output.dir` in your playbook.
 For the [default output dir](https://docs.antora.org/antora/2.0/playbook/configure-output/#default-output-dir),
-that will be `build/site/search_index.json.gz`.
+that will be `build/site/search-index.js`.
 
 ### Enable the search component in the UI
 
-Now that we have a `search_index.json.gz`, we need to enable the search component in the UI.
+Now that we have a `search-index.js`, we need to enable the search component in the UI.
 
 Copy the `supplemental_ui` directory in your Antora playbook repository and configure a `supplemental_files`:
 
@@ -79,7 +79,7 @@ ui:
 
 **NOTE:** For this to function correctly you must provide the `site.url` key in your playbook file.
 See the Antora docs on the [playbook schema](https://docs.antora.org/antora/1.1/playbook/playbook-schema/).
-If using the site locally (not serving from a webserver) then you can set your `site.url` to a `file://` reference, e.g. `file:///home/documents/antora/website/public/`.
+If using the site locally (not serving from a web server) then you can set your `site.url` to a `file://` reference, e.g. `file:///home/documents/antora/website/public/`.
 
 **TIP:** If you are using [serve](https://www.npmjs.com/package/serve) HTTP server to view your site locally,
 set the `site.url` to `http://localhost:5000`.
@@ -97,13 +97,6 @@ For instance, as a command line:
 $ DOCSEARCH_ENABLED=true DOCSEARCH_ENGINE=lunr antora site.yml
 ```
 
-**NOTE:**
-Cross-origin browser security may prevent access to the `search_index.json.gz` file.
-This can be disabled but should be only be [done temporarily](http://testingfreak.com/how-to-fix-cross-origin-request-security-cors-error-in-firefox-chrome-and-ie/) during development as it opens a significant security hole.
-
-It's recommended to use a local HTTP server to view your site locally using for instance [serve](https://www.npmjs.com/package/serve).
-
-
 ### Testing this module
 
-In the root of the repository, run `npm test`.
+In the root of the repository, run `npm t`.
