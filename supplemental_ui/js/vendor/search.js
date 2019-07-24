@@ -90,6 +90,21 @@ window.antoraLunr = (function (lunr) {
     return hits
   }
 
+  function createSearchResult(result, store, searchResultDataset) {
+    result.forEach(function (item) {
+      var url = item.ref
+      var hash
+      if (url.includes('#')) {
+        hash = url.substring(url.indexOf('#') + 1)
+        url = url.replace('#' + hash, '')
+      }
+      var doc = store[url]
+      var metadata = item.matchData.metadata
+      var hits = highlightHit(metadata, hash, doc)
+      searchResultDataset.appendChild(createSearchResultItem(doc, item, hits))
+    })
+  }
+
   function createSearchResultItem (doc, item, hits) {
     var documentTitle = document.createElement('div')
     documentTitle.classList.add('search-result-document-title')
@@ -121,6 +136,22 @@ window.antoraLunr = (function (lunr) {
     return searchResultItem
   }
 
+  function search (index, text) {
+    // execute an exact match search
+    var result = index.search(text)
+    if (result.length > 0) {
+      return result
+    }
+    // no result, use a begins with search
+    result = index.search(text + '*')
+    if (result.length > 0) {
+      return result
+    }
+    // no result, use a contains search
+    result = index.search('*' + text + '*')
+    return result
+  }
+
   function searchIndex (index, store, text) {
     // reset search result
     while (searchResult.firstChild) {
@@ -129,23 +160,12 @@ window.antoraLunr = (function (lunr) {
     if (text.trim() === '') {
       return
     }
-    var result = index.search(text)
+    var result = search(index, text)
     var searchResultDataset = document.createElement('div')
     searchResultDataset.classList.add('search-result-dataset')
     searchResult.appendChild(searchResultDataset)
     if (result.length > 0) {
-      result.forEach(function (item) {
-        var url = item.ref
-        var hash
-        if (url.includes('#')) {
-          hash = url.substring(url.indexOf('#') + 1)
-          url = url.replace('#' + hash, '')
-        }
-        var doc = store[url]
-        var metadata = item.matchData.metadata
-        var hits = highlightHit(metadata, hash, doc)
-        searchResultDataset.appendChild(createSearchResultItem(doc, item, hits))
-      })
+      createSearchResult(result, store, searchResultDataset)
     } else {
       searchResultDataset.appendChild(createNoResult(text))
     }
