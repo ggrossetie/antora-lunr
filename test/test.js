@@ -152,4 +152,46 @@ describe('Generate index', function () {
     expect(index.index.search('asciidoctor'), '"Asciidoctor" is a navigation title and should not be indexed').to.have.lengthOf(0)
     expect(index.index.search('help'), '"How Antora Can Help" is a navigation item and should not be indexed').to.have.lengthOf(0)
   })
+  it('should only index the first document title (heading 1)', () => {
+    const playbook = {
+      site: {
+        url: 'https://docs.antora.org'
+      }
+    }
+    const pages = [{
+      contents: Buffer.from(`
+<article class="doc">
+  <h1 class="page">What’s New in Antora</h1>
+  <div id="preamble">
+    <div class="sectionbody">
+      <div class="paragraph">
+        <p>Learn about what’s new in the 2.0 release series of Antora.</p>
+      </div>
+    </div>
+  </div>
+  <h1 id="antora-2-0-0" class="sect0"><a class="anchor" href="#antora-2-0-0"></a>Antora 2.0.0</h1>
+  <div class="openblock partintro">
+    <div class="content">
+      <div class="paragraph">
+        <p><em><strong>Release date:</strong> 2018.12.25 | <strong>Milestone (closed issues):</strong> <a href="https://gitlab.com/antora/antora/issues?milestone_title=v2.0.x&amp;scope=all&amp;state=closed" target="_blank" rel="noopener">v2.0.x</a></em></p>
+      </div>
+      <div class="paragraph">
+        <p>The Antora 2.0.0 release streamlines the installation process, improves platform and library compatibility, provides a simpler and pluggable authentication mechanism for private repositories, and delivers the latest Asciidoctor capabilities.</p>
+      </div>
+    </div>
+  </div>
+</article>`),
+      src: {
+        component: 'hello',
+        version: '1.0',
+        stem: ''
+      },
+      pub: {
+        url: '/antora/1.0/whats-new.html'
+      }
+    }]
+    const index = generateIndex(playbook, pages)
+    const whatsNewPage = index.store['https://docs.antora.org/antora/1.0/whats-new.html']
+    expect(whatsNewPage.title).to.equal('What’s New in Antora')
+  })
 })
