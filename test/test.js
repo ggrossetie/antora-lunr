@@ -28,6 +28,7 @@ describe('Generate index', function () {
         version: '2.0',
         stem: 'install-foo'
       },
+      asciidoc: {},
       pub: {
         url: '/component-a/install-foo'
       }
@@ -48,6 +49,7 @@ describe('Generate index', function () {
         version: '2.0',
         stem: 'install-foo'
       },
+      asciidoc: {},
       pub: {
         url: '/component-a/install-foo'
       }
@@ -89,6 +91,7 @@ describe('Generate index', function () {
         version: '1.0',
         stem: ''
       },
+      asciidoc: {},
       pub: {
         url: '/antora/1.0/'
       }
@@ -139,6 +142,7 @@ describe('Generate index', function () {
         version: '1.0',
         stem: ''
       },
+      asciidoc: {},
       pub: {
         url: '/antora/1.0/'
       }
@@ -186,6 +190,7 @@ describe('Generate index', function () {
         version: '1.0',
         stem: ''
       },
+      asciidoc: {},
       pub: {
         url: '/antora/1.0/whats-new.html'
       }
@@ -193,5 +198,206 @@ describe('Generate index', function () {
     const index = generateIndex(playbook, pages)
     const whatsNewPage = index.store['https://docs.antora.org/antora/1.0/whats-new.html']
     expect(whatsNewPage.title).to.equal('What’s New in Antora')
+  })
+  it('should exclude pages with noindex defined as metadata', () => {
+    const playbook = {
+      site: {
+        url: 'https://docs.antora.org'
+      }
+    }
+    const pages = [{
+      contents: Buffer.from(`
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Antora Documentation :: Antora Docs</title>
+    <meta name="keywords" content="Docs as Code, DocOps, content management system, docs writers, publish software documentation, CI and docs, CD and docs">
+    <meta name="generator" content="Antora 2.0.0">
+    <meta name="robots" content="noindex">
+  </head>
+  <body class="article">
+    <main role="main">
+      <article class="doc">
+        <h1 class="page">Antora Documentation</h1>
+        <div class="sect1">
+          <h2 id="manage-docs-as-code"><a class="anchor" href="#manage-docs-as-code"></a>Manage docs as code</h2>
+          <div class="sectionbody">
+            <div class="paragraph">
+              <p>With Antora, you manage <strong>docs as code</strong>.
+              That means your documentation process benefits from the same practices used to produce successful software.</p>
+            </div>
+            <div class="paragraph">
+              <p>Some of these practices include:</p>
+            </div>
+            <div class="ulist">
+              <ul>
+                <li>
+                  <p>Storing content in a version control system.</p>
+                </li>
+                <li>
+                  <p>Separating content, configuration, and presentation.</p>
+                </li>
+                <li>
+                  <p>Leveraging automation for compilation, validation, verification, and publishing.</p>
+                </li>
+                <li>
+                  <p>Reusing shared materials (DRY).</p>
+                </li>
+              </ul>
+            </div>
+            <div class="paragraph">
+              <p>Antora helps you incorporate these practices into your documentation workflow.
+              As a result, your documentation is much easier to manage, maintain, and enhance.</p>
+            </div>
+          </div>  
+        </div>
+      </article>
+    </main>
+  </body>  
+</html>`),
+      src: {
+        component: 'hello',
+        version: '1.0',
+        stem: ''
+      },
+      asciidoc: {},
+      pub: {
+        url: '/antora/1.0/'
+      }
+    },
+    {
+      contents: Buffer.from(`
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Antora Documentation :: Antora Docs</title>
+  <meta name="keywords" content="Docs as Code, DocOps, content management system, docs writers, publish software documentation, CI and docs, CD and docs">
+  <meta name="generator" content="Antora 2.0.0">
+  <meta name="robots" content="index">
+</head>
+<body class="article">
+  <main role="main">
+    <article class="doc">
+      <h1 class="page">How Antora Can Help You and Your Team</h1>
+      <div class="sect1">
+        <h2 id="agile-and-secure"><a class="anchor" href="#agile-and-secure"></a>Agile and secure</h2>
+        <div class="sectionbody">
+          <div class="paragraph">
+              <p><strong>Automate the assembly of your secure, nimble static site as changes happen instead of wrestling with a CMS giant.</strong></p>
+          </div>
+          <div class="paragraph">
+            <p>Rebuild and deploy your site automatically in a matter of seconds in response to any change.
+            Never have to worry about patching security holes in your deployed CMS application since you don’t have one.
+            All pages are static—&#8203;in the JAMstack style.
+            Need to migrate your site to a different domain?
+            Just rebuild the site and relaunch it on the new host.</p>
+          </div>
+          <div class="paragraph">
+            <p><strong>Adapt your site to fit seamlessly with your other web properties.</strong></p>
+          </div>
+          <div class="paragraph">
+            <p>No site is an island.
+            Sites must play nice with others to maintain a consistent brand and user experiences.
+            Static sites generated by Antora are well-suited for this role.
+            With page templates and a little help from an automated process, you can blend your documentation pages into existing sites, giving the impression it’s all part of a single uniform site.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+</body>  
+</html>`),
+      src: {
+        component: 'hello',
+        version: '1.0',
+        stem: ''
+      },
+      asciidoc: {},
+      pub: {
+        url: '/antora/1.0/features/'
+      }
+    }]
+    const index = generateIndex(playbook, pages)
+    const privatePage = index.store['https://docs.antora.org/antora/1.0/']
+    expect(privatePage).to.be.undefined()
+    const featuresPage = index.store['https://docs.antora.org/antora/1.0/features/']
+    expect(featuresPage.text).to.equal('Automate the assembly of your secure, nimble static site as changes happen instead of wrestling with a CMS giant. Rebuild and deploy your site automatically in a matter of seconds in response to any change. Never have to worry about patching security holes in your deployed CMS application since you don’t have one. All pages are static—​in the JAMstack style. Need to migrate your site to a different domain? Just rebuild the site and relaunch it on the new host. Adapt your site to fit seamlessly with your other web properties. No site is an island. Sites must play nice with others to maintain a consistent brand and user experiences. Static sites generated by Antora are well-suited for this role. With page templates and a little help from an automated process, you can blend your documentation pages into existing sites, giving the impression it’s all part of a single uniform site.')
+  })
+  it('should exclude pages with noindex defined as attribute', () => {
+    const playbook = {
+      site: {
+        url: 'https://docs.antora.org'
+      }
+    }
+    const pages = [{
+      contents: Buffer.from(`
+<html lang="en">
+  <body class="article">
+    <main role="main">
+      <article class="doc">
+        <h1 class="page">Antora Documentation</h1>
+        <div class="sect1">
+          <h2 id="manage-docs-as-code"><a class="anchor" href="#manage-docs-as-code"></a>Manage docs as code</h2>
+          <div class="sectionbody">
+            <div class="paragraph">
+              <p>With Antora, you manage <strong>docs as code</strong>.
+              That means your documentation process benefits from the same practices used to produce successful software.</p>
+            </div>
+          </div>  
+        </div>
+      </article>
+    </main>
+  </body>  
+</html>`),
+      src: {
+        component: 'hello',
+        version: '1.0',
+        stem: ''
+      },
+      asciidoc: {
+        attributes: {
+          noindex: ''
+        }
+      },
+      pub: {
+        url: '/antora/1.0/'
+      }
+    },
+    {
+      contents: Buffer.from(`
+<html lang="en">
+<body class="article">
+  <main role="main">
+    <article class="doc">
+      <h1 class="page">How Antora Can Help You and Your Team</h1>
+      <div class="sect1">
+        <h2 id="agile-and-secure"><a class="anchor" href="#agile-and-secure"></a>Agile and secure</h2>
+        <div class="sectionbody">
+          <div class="paragraph">
+              <p><strong>Automate the assembly of your secure, nimble static site as changes happen instead of wrestling with a CMS giant.</strong></p>
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+</body>  
+</html>`),
+      src: {
+        component: 'hello',
+        version: '1.0',
+        stem: ''
+      },
+      asciidoc: {},
+      pub: {
+        url: '/antora/1.0/features/'
+      }
+    }]
+    const index = generateIndex(playbook, pages)
+    const privatePage = index.store['https://docs.antora.org/antora/1.0/']
+    expect(privatePage).to.be.undefined()
+    const featuresPage = index.store['https://docs.antora.org/antora/1.0/features/']
+    expect(featuresPage.text).to.equal('Automate the assembly of your secure, nimble static site as changes happen instead of wrestling with a CMS giant.')
   })
 })
