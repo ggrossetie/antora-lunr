@@ -121,6 +121,9 @@ window.antoraLunr = (function (lunr) {
     searchResultItem.classList.add('search-result-item')
     searchResultItem.appendChild(documentTitle)
     searchResultItem.appendChild(documentHit)
+    searchResultItem.addEventListener('mousedown', function (e) {
+      e.preventDefault()
+    })
     return searchResultItem
   }
 
@@ -192,8 +195,15 @@ window.antoraLunr = (function (lunr) {
     var search = debounce(function () {
       searchIndex(index.index, index.store, searchInput.value)
     }, 100)
-    // TODO listen to blur, focus and input events
     searchInput.addEventListener('keydown', search)
+
+    // this is prevented in case of mousedown attached to SearchResultItem
+    searchInput.addEventListener('blur', function (e) {
+      e.target.value = ''
+      while (searchResult.firstChild) {
+        searchResult.removeChild(searchResult.firstChild)
+      }
+    })
   }
 
   return {
