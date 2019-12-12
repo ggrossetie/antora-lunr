@@ -199,7 +199,6 @@ window.antoraLunr = (function (lunr) {
 
     // this is prevented in case of mousedown attached to SearchResultItem
     searchInput.addEventListener('blur', function (e) {
-      e.target.value = ''
       while (searchResult.firstChild) {
         searchResult.removeChild(searchResult.firstChild)
       }
