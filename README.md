@@ -10,7 +10,10 @@ It makes it possible to add an *offline* search engine in your Antora's document
 
 ### Generate an index file
 
-To integrate Lunr in Antora, we need to modify the site generator pipeline.
+To integrate Lunr in Antora, we can either use a custom site generator pipeline that includes Lunr or modify your current site generator pipeline.
+
+**TIP:**
+To make things easier, we provide a copy of the default site generator that in addition produces a Lunr index. Learn how to [install and use this generator](https://github.com/Mogztter/antora-site-generator-lunr).
 
 **NOTE:**
 The following instructions only apply if you are using the default pipeline.
