@@ -18,7 +18,8 @@
     "test": "mocha"
   },
   "files": [
-    "lib/"
+    "lib/",
+    "supplemental_ui"
   ],
   "keywords": [
     "antora",

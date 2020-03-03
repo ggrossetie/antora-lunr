@@ -70,7 +70,7 @@ that will be `build/site/search-index.js`.
 
 Now that we have a `search-index.js`, we need to enable the search component in the UI.
 
-Copy the `supplemental_ui` directory in your Antora playbook repository and configure a `supplemental_files`:
+Copy the `supplemental_ui` directory from the npm package *node_modules/antora-lunr/supplemental_ui* in your Antora playbook repository and configure a `supplemental_files`:
 
 ```yml
 ui:
