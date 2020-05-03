@@ -5,7 +5,7 @@
 
 [Lunr](https://lunrjs.com/) provides a great search experience without the need for external, server-side, search services.
 It makes it possible to add an *offline* search engine in your Antora's documentation site.
- 
+
 ## Usage
 
 ### Generate an index file
@@ -98,6 +98,18 @@ For instance, as a command line:
 
 ```console
 $ DOCSEARCH_ENABLED=true DOCSEARCH_ENGINE=lunr antora site.yml
+```
+
+### Configuration
+
+To index only the latest (released) version, set the following environment variable:
+
+* `DOCSEARCH_INDEX_VERSION=latest`
+
+For instance, as a command line:
+
+```console
+$ DOCSEARCH_ENABLED=true DOCSEARCH_ENGINE=lunr DOCSEARCH_INDEX_VERSION=latest antora site.yml
 ```
 
 ### Testing this module

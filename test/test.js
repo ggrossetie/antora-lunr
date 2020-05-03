@@ -4,6 +4,7 @@ const expect = chai.expect
 const dirtyChai = require('dirty-chai')
 chai.use(dirtyChai)
 const generateIndex = require('../lib/index')
+const mockContentCatalog = require('./mock-content-catalog.js')
 
 describe('Generate index', () => {
   it('should generate an empty index when there\'s no page', () => {
@@ -14,7 +15,9 @@ describe('Generate index', () => {
     }
     // no page, no index!
     const pages = []
-    const index = generateIndex(playbook, pages)
+    const contentCatalog = {}
+    const env = {}
+    const index = generateIndex(playbook, pages, contentCatalog, env)
     expect(index).to.be.empty()
   })
   it('should generate an index', () => {
@@ -35,7 +38,9 @@ describe('Generate index', () => {
         url: '/component-a/install-foo'
       }
     }]
-    const index = generateIndex(playbook, pages)
+    const contentCatalog = {}
+    const env = {}
+    const index = generateIndex(playbook, pages, contentCatalog, env)
     const installPage = index.store['/docs/component-a/install-foo']
     expect(installPage.text).to.equal('foo')
     expect(installPage.component).to.equal('component-a')
@@ -77,7 +82,9 @@ describe('Generate index', () => {
         url: '/antora/1.0/'
       }
     }]
-    const index = generateIndex(playbook, pages)
+    const contentCatalog = {}
+    const env = {}
+    const index = generateIndex(playbook, pages, contentCatalog, env)
     const installPage = index.store['/antora/1.0/']
     expect(installPage.text).to.equal('The Static Site Generator for Tech Writers This site hosts the technical documentation for Antora With Antora, you manage docs as code')
     expect(installPage.component).to.equal('hello')
@@ -128,7 +135,9 @@ describe('Generate index', () => {
         url: '/antora/1.0/'
       }
     }]
-    const index = generateIndex(playbook, pages)
+    const contentCatalog = {}
+    const env = {}
+    const index = generateIndex(playbook, pages, contentCatalog, env)
     const installPage = index.store['/antora/1.0/']
     expect(installPage.text).to.equal('The Static Site Generator for Tech Writers This site hosts the technical documentation for Antora With Antora, you manage docs as code')
     expect(installPage.component).to.equal('hello')
@@ -176,7 +185,9 @@ describe('Generate index', () => {
         url: '/antora/1.0/whats-new.html'
       }
     }]
-    const index = generateIndex(playbook, pages)
+    const contentCatalog = {}
+    const env = {}
+    const index = generateIndex(playbook, pages, contentCatalog, env)
     const whatsNewPage = index.store['/antora/1.0/whats-new.html']
     expect(whatsNewPage.title).to.equal('What’s New in Antora')
   })
@@ -231,11 +242,11 @@ describe('Generate index', () => {
               <p>Antora helps you incorporate these practices into your documentation workflow.
               As a result, your documentation is much easier to manage, maintain, and enhance.</p>
             </div>
-          </div>  
+          </div>
         </div>
       </article>
     </main>
-  </body>  
+  </body>
 </html>`),
       src: {
         component: 'hello',
@@ -288,7 +299,7 @@ describe('Generate index', () => {
       </div>
     </article>
   </main>
-</body>  
+</body>
 </html>`),
       src: {
         component: 'hello',
@@ -300,7 +311,9 @@ describe('Generate index', () => {
         url: '/antora/1.0/features/'
       }
     }]
-    const index = generateIndex(playbook, pages)
+    const contentCatalog = {}
+    const env = {}
+    const index = generateIndex(playbook, pages, contentCatalog, env)
     const privatePage = index.store['/antora/1.0/']
     expect(privatePage).to.be.undefined()
     const featuresPage = index.store['/antora/1.0/features/']
@@ -326,11 +339,11 @@ describe('Generate index', () => {
               <p>With Antora, you manage <strong>docs as code</strong>.
               That means your documentation process benefits from the same practices used to produce successful software.</p>
             </div>
-          </div>  
+          </div>
         </div>
       </article>
     </main>
-  </body>  
+  </body>
 </html>`),
       src: {
         component: 'hello',
@@ -363,7 +376,7 @@ describe('Generate index', () => {
       </div>
     </article>
   </main>
-</body>  
+</body>
 </html>`),
       src: {
         component: 'hello',
@@ -375,11 +388,101 @@ describe('Generate index', () => {
         url: '/antora/1.0/features/'
       }
     }]
-    const index = generateIndex(playbook, pages)
+    const contentCatalog = {}
+    const env = {}
+    const index = generateIndex(playbook, pages, contentCatalog, env)
     const privatePage = index.store['/antora/1.0/']
     expect(privatePage).to.be.undefined()
     const featuresPage = index.store['/antora/1.0/features/']
     expect(featuresPage.text).to.equal('Automate the assembly of your secure, nimble static site as changes happen instead of wrestling with a CMS giant.')
+  })
+  it('if so configured, should only index the latest version when there are multiple versions', () => {
+    const playbook = {
+      site: {
+        url: 'https://docs.antora.org'
+      }
+    }
+    const pages = [{
+      contents: Buffer.from(`
+<html lang="en">
+  <body class="article">
+    <main role="main">
+      <article class="doc">
+        <h1 class="page">Antora Documentation</h1>
+        <div class="sect1">
+          <h2 id="manage-docs-as-code"><a class="anchor" href="#manage-docs-as-code"></a>Manage docs as code</h2>
+          <div class="sectionbody">
+            <div class="paragraph">
+              <p>With Antora, you manage <strong>docs as code</strong>.
+              That means your documentation process benefits from the same practices used to produce successful software.</p>
+              <p>In the next version which is not this one, we expect to find Spinnacles</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>`),
+      src: {
+        component: 'hello',
+        version: '1.0',
+        stem: ''
+      },
+      asciidoc: {},
+      pub: {
+        url: '/antora/1.0/features/'
+      }
+    },
+    {
+      contents: Buffer.from(`
+<html lang="en">
+<body class="article">
+  <main role="main">
+    <article class="doc">
+      <h1 class="page">How Antora Can Help You and Your Team</h1>
+      <div class="sect1">
+        <h2 id="agile-and-secure"><a class="anchor" href="#agile-and-secure"></a>Agile and secure</h2>
+        <div class="sectionbody">
+          <div class="paragraph">
+              <p><strong>Automate the assembly of your secure, nimble static site as changes happen instead of wrestling with a CMS giant.</strong></p>
+              <p>In the latest version we benefit from having Spinnacles.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+</body>
+</html>`),
+      src: {
+        component: 'hello',
+        version: '1.5',
+        stem: ''
+      },
+      asciidoc: {},
+      pub: {
+        url: '/antora/1.5/features/'
+      }
+    }]
+    const contentCatalog = mockContentCatalog(
+      [{
+          component: 'hello',
+          version: '1.0',
+          module: 'module-a',
+          family: 'page',
+          relative: 'antora/1.0/features/',
+          contents: 'not provided'
+      },
+      {
+          component: 'hello',
+          version: '1.5',
+          module: 'module-a',
+          family: 'page',
+          relative: 'antora/1.5/features/',
+          contents: 'not provided'
+      }])
+    const env = {'DOCSEARCH_INDEX_VERSION': 'latest'}
+    const index = generateIndex(playbook, pages, contentCatalog, env)
+    expect(index.index.search('spinnacle').length).to.equal(1)
   })
   describe('Paths', () => {
     it('should use relative links when site URL is not defined', () => {
@@ -397,7 +500,9 @@ describe('Generate index', () => {
           url: '/component-a/install-foo'
         }
       }]
-      const index = generateIndex(playbook, pages)
+      const contentCatalog = {}
+      const env = {}
+      const index = generateIndex(playbook, pages, contentCatalog, env)
       expect(index.store['/component-a/install-foo'].url).to.equal('/component-a/install-foo')
     })
     it('should use relative links when site URL is a relative path', () => {
@@ -417,7 +522,9 @@ describe('Generate index', () => {
           url: '/component-a/install-foo'
         }
       }]
-      const index = generateIndex(playbook, pages)
+      const contentCatalog = {}
+      const env = {}
+      const index = generateIndex(playbook, pages, contentCatalog, env)
       expect(index.store['/docs/component-a/install-foo'].url).to.equal('/docs/component-a/install-foo')
     })
     it('should use absolute links when site URL is an absolute local path (using file:// protocol)', () => {
@@ -437,7 +544,9 @@ describe('Generate index', () => {
           url: '/component-a/install-foo'
         }
       }]
-      const index = generateIndex(playbook, pages)
+      const contentCatalog = {}
+      const env = {}
+      const index = generateIndex(playbook, pages, contentCatalog, env)
       expect(index.store['/path/to/docs/component-a/install-foo'].url).to.equal('/path/to/docs/component-a/install-foo')
     })
   })
