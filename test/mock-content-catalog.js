@@ -12,7 +12,7 @@ function mockContentCatalog (seed = []) {
     image: 'images',
     nav: '',
     page: 'pages',
-    partial: 'pages/_partials',
+    partial: 'pages/_partials'
   }
   const components = {}
   const entries = []
@@ -48,8 +48,8 @@ function mockContentCatalog (seed = []) {
         relative,
         family,
         basename: path.basename(relative),
-        stem: path.basename(relative, path.extname(relative)),
-      },
+        stem: path.basename(relative, path.extname(relative))
+      }
     }
     if (mediaType) entry.src.mediaType = entry.mediaType = mediaType
     const pubVersion = version === 'master' ? '' : version
@@ -65,7 +65,7 @@ function mockContentCatalog (seed = []) {
               .join('/')
             : indexify
               ? '..'
-              : '.',
+              : '.'
         }
         let url = '/' + entry.out.path
         if (~url.indexOf(' ')) url = url.replace(SPACE_RX, '%20')
@@ -74,7 +74,7 @@ function mockContentCatalog (seed = []) {
     } else if (family === 'nav') {
       entry.pub = {
         url: '/' + path.join(component, pubVersion, pubModule) + '/',
-        moduleRootPath: '.',
+        moduleRootPath: '.'
       }
       entry.nav = { index: navIndex }
     }
@@ -99,4 +99,3 @@ function buildComponentVersionKey (component, version) {
 }
 
 module.exports = mockContentCatalog
-

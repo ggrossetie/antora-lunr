@@ -465,22 +465,22 @@ describe('Generate index', () => {
     }]
     const contentCatalog = mockContentCatalog(
       [{
-          component: 'hello',
-          version: '1.0',
-          module: 'module-a',
-          family: 'page',
-          relative: 'antora/1.0/features/',
-          contents: 'not provided'
+        component: 'hello',
+        version: '1.0',
+        module: 'module-a',
+        family: 'page',
+        relative: 'antora/1.0/features/',
+        contents: 'not provided'
       },
       {
-          component: 'hello',
-          version: '1.5',
-          module: 'module-a',
-          family: 'page',
-          relative: 'antora/1.5/features/',
-          contents: 'not provided'
+        component: 'hello',
+        version: '1.5',
+        module: 'module-a',
+        family: 'page',
+        relative: 'antora/1.5/features/',
+        contents: 'not provided'
       }])
-    const env = {'DOCSEARCH_INDEX_VERSION': 'latest'}
+    const env = { DOCSEARCH_INDEX_VERSION: 'latest' }
     const index = generateIndex(playbook, pages, contentCatalog, env)
     expect(index.index.search('spinnacle').length).to.equal(1)
   })
