@@ -468,17 +468,13 @@ describe('Generate index', () => {
         component: 'hello',
         version: '1.0',
         module: 'module-a',
-        family: 'page',
-        relative: 'antora/1.0/features/',
-        contents: 'not provided'
+        family: 'page'
       },
       {
         component: 'hello',
         version: '1.5',
         module: 'module-a',
-        family: 'page',
-        relative: 'antora/1.5/features/',
-        contents: 'not provided'
+        family: 'page'
       }])
     const env = { DOCSEARCH_INDEX_VERSION: 'latest' }
     const index = generateIndex(playbook, pages, contentCatalog, env)

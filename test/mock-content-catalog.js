@@ -8,31 +8,14 @@
  *  see https://gitlab.com/antora/antora/-/blob/master/test/mock-content-catalog.js
  *  Copyright © 2017-2020 by OpenDevise Inc. and the individual contributors to Antora. */
 
-const { posix: path } = require('path')
-
-const SPACE_RX = / /g
-
 function mockContentCatalog (seed = []) {
   if (!Array.isArray(seed)) seed = [seed]
-  const familyDirs = {
-    alias: 'pages',
-    example: 'examples',
-    image: 'images',
-    nav: '',
-    page: 'pages',
-    partial: 'pages/_partials'
-  }
   const components = {}
-  const entries = []
-  const entriesById = {}
-  const entriesByPath = {}
-  const entriesByFamily = {}
-  seed.forEach(({ component, version, module: module_, family, relative, contents, mediaType, navIndex, indexify }) => {
+  seed.forEach(({ component, version, module: module_, family }) => {
     if (component == null) component = 'component-a'
     if (version == null) version = 'master'
     if (module_ == null) module_ = 'module-a'
     if (!family) family = 'page'
-    if (!contents) contents = ''
     let versions
     if (component in components) {
       versions = components[component].versions
@@ -42,56 +25,6 @@ function mockContentCatalog (seed = []) {
     }
     // NOTE assume we want the latest to be the last version we register
     components[component].latest = versions[0]
-    const componentVersionKey = buildComponentVersionKey(component, version)
-    const componentRelativePath = path.join(module_ ? 'modules' : '', module_, familyDirs[family], relative)
-    const entry = {
-      path: componentRelativePath,
-      dirname: path.dirname(componentRelativePath),
-      contents: Buffer.from(contents),
-      src: {
-        path: componentRelativePath,
-        component,
-        version,
-        module: module_ || undefined,
-        relative,
-        family,
-        basename: path.basename(relative),
-        stem: path.basename(relative, path.extname(relative))
-      }
-    }
-    if (mediaType) entry.src.mediaType = entry.mediaType = mediaType
-    const pubVersion = version === 'master' ? '' : version
-    const pubModule = module_ === 'ROOT' ? '' : module_
-    if (family === 'page' || family === 'alias' || family === 'image') {
-      if (!~('/' + relative).indexOf('/_')) {
-        const relativeOut = family === 'image' ? relative : relative.slice(0, -5) + (indexify ? '/' : '.html')
-        entry.out = {
-          path: path.join(component, pubVersion, pubModule, relativeOut),
-          moduleRootPath: relative.includes('/')
-            ? Array(relative.split('/').length - (indexify ? 0 : 1))
-              .fill('..')
-              .join('/')
-            : indexify
-              ? '..'
-              : '.'
-        }
-        let url = '/' + entry.out.path
-        if (~url.indexOf(' ')) url = url.replace(SPACE_RX, '%20')
-        entry.pub = { url, moduleRootPath: entry.out.moduleRootPath }
-      }
-    } else if (family === 'nav') {
-      entry.pub = {
-        url: '/' + path.join(component, pubVersion, pubModule) + '/',
-        moduleRootPath: '.'
-      }
-      entry.nav = { index: navIndex }
-    }
-    const byIdKey = componentVersionKey + (module_ || '') + ':' + family + '$' + relative
-    const byPathKey = componentVersionKey + componentRelativePath
-    entries.push(entry)
-    entriesById[byIdKey] = entriesByPath[byPathKey] = entry
-    if (!(family in entriesByFamily)) entriesByFamily[family] = []
-    entriesByFamily[family].push(entry)
   })
 
   return {
@@ -100,10 +33,6 @@ function mockContentCatalog (seed = []) {
     getComponentVersion: (component, version) =>
       (typeof component === 'string' ? components[component] : component).versions.find((it) => it.version === version)
   }
-}
-
-function buildComponentVersionKey (component, version) {
-  return version + '@' + component + ':'
 }
 
 module.exports = mockContentCatalog
