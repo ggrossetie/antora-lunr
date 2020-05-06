@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-/* This source code is taken frome the Antora test suite with minor modifications
+/* This source code is taken frome the Antora test suite with some removals
  *  see https://gitlab.com/antora/antora/-/blob/master/test/mock-content-catalog.js
  *  Copyright © 2017-2020 by OpenDevise Inc. and the individual contributors to Antora. */
 
