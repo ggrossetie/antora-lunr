@@ -396,7 +396,7 @@ describe('Generate index', () => {
     const featuresPage = index.store['/antora/1.0/features/']
     expect(featuresPage.text).to.equal('Automate the assembly of your secure, nimble static site as changes happen instead of wrestling with a CMS giant.')
   })
-  it('if so configured, should only index the latest version when there are multiple versions', () => {
+  it('should only index the latest version when there are multiple versions and DOCSEARCH_INDEX_VERSION=latest', () => {
     const playbook = {
       site: {
         url: 'https://docs.antora.org'
