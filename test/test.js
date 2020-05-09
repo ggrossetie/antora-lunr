@@ -41,7 +41,7 @@ describe('Generate index', () => {
     const contentCatalog = {}
     const env = {}
     const index = generateIndex(playbook, pages, contentCatalog, env)
-    const installPage = index.store['/docs/component-a/install-foo']
+    const installPage = index.store['/component-a/install-foo']
     expect(installPage.text).to.equal('foo')
     expect(installPage.component).to.equal('component-a')
     expect(installPage.version).to.equal('2.0')
@@ -521,9 +521,9 @@ describe('Generate index', () => {
       const contentCatalog = {}
       const env = {}
       const index = generateIndex(playbook, pages, contentCatalog, env)
-      expect(index.store['/docs/component-a/install-foo'].url).to.equal('/docs/component-a/install-foo')
+      expect(index.store['/component-a/install-foo'].url).to.equal('/component-a/install-foo')
     })
-    it('should use absolute links when site URL is an absolute local path (using file:// protocol)', () => {
+    it('should use relative links when site URL is an absolute local path (using file:// protocol)', () => {
       const playbook = {
         site: {
           url: 'file:///path/to/docs'
@@ -543,7 +543,7 @@ describe('Generate index', () => {
       const contentCatalog = {}
       const env = {}
       const index = generateIndex(playbook, pages, contentCatalog, env)
-      expect(index.store['/path/to/docs/component-a/install-foo'].url).to.equal('/path/to/docs/component-a/install-foo')
+      expect(index.store['/component-a/install-foo'].url).to.equal('/component-a/install-foo')
     })
   })
 })
