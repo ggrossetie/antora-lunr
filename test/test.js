@@ -146,6 +146,37 @@ describe('Generate index', () => {
     expect(index.index.search('asciidoctor'), '"Asciidoctor" is a navigation title and should not be indexed').to.have.lengthOf(0)
     expect(index.index.search('help'), '"How Antora Can Help" is a navigation item and should not be indexed').to.have.lengthOf(0)
   })
+  it('should not index pagination', () => {
+    const playbook = {
+      site: {
+        url: 'https://docs.antora.org'
+      }
+    }
+    const pages = [{
+      contents: Buffer.from(`
+<article class="doc">
+  <h1>Antora Documentation</h1>
+  <p>The Static Site Generator for Tech Writers</p>
+  <nav class="pagination">
+    Pagination
+  </nav>
+</article>`),
+      src: {
+        component: 'hello',
+        version: '1.0',
+        stem: ''
+      },
+      asciidoc: {},
+      pub: {
+        url: '/antora/1.0/'
+      }
+    }]
+    const contentCatalog = {}
+    const env = {}
+    const index = generateIndex(playbook, pages, contentCatalog, env)
+    const installPage = index.store['/antora/1.0/']
+    expect(installPage.text).to.equal('The Static Site Generator for Tech Writers')
+  })
   it('should only index the first document title (heading 1)', () => {
     const playbook = {
       site: {
