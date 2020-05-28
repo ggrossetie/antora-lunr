@@ -41,7 +41,7 @@ describe('Generate index', () => {
     const contentCatalog = {}
     const env = {}
     const index = generateIndex(playbook, pages, contentCatalog, env)
-    const installPage = index.store['/component-a/install-foo']
+    const installPage = index.store['/docs/component-a/install-foo']
     expect(installPage.text).to.equal('foo')
     expect(installPage.component).to.equal('component-a')
     expect(installPage.version).to.equal('2.0')
