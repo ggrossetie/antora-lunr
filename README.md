@@ -44,7 +44,7 @@ const generateIndex = require('antora-lunr')
 In the `generateSite` function add the following two lines after `const siteFiles = mapSite(playbook, pages).concat(produceRedirects(playbook, contentCatalog))`:
 
 ```js
-const index = generateIndex(playbook, pages)
+const index = generateIndex(playbook, pages, contentCatalog, env)
 siteFiles.push(generateIndex.createIndexFile(index))
 ```
 
