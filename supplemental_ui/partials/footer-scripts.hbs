@@ -1,8 +1,5 @@
-<script>
-  window.antora = window.antora || {}
-  window.antora.basePath = '{{or siteRootPath (or site.url siteRootUrl)}}'
-  window.antora.pagePath = '{{@root.page.url}}'
-</script>
+<input type="hidden" id="antora-basePath" value="{{or siteRootPath (or site.url siteRootUrl)}}">
+<input type="hidden" id="antora-pagePath" value="{{@root.page.url}}">
 <script src="{{uiRootPath}}/js/site.js"></script>
 {{#if (eq env.DOCSEARCH_ENGINE 'lunr')}}
 <script src="{{uiRootPath}}/js/vendor/lunr.js"></script>
