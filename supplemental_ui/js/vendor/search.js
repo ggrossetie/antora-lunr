@@ -1,5 +1,9 @@
 /* eslint-env browser */
 window.antoraLunr = (function (lunr) {
+  window.antora = window.antora || {}
+  window.antora.basePath = document.getElementById('antora-basePath').value
+  window.antora.pagePath = document.getElementById('antora-pagePath').value
+
   var searchInput = document.getElementById('search-input')
   var searchResult = document.createElement('div')
   searchResult.classList.add('search-result-dropdown-menu')
