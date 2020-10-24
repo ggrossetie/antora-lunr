@@ -6,6 +6,12 @@ chai.use(dirtyChai)
 const generateIndex = require('../lib/index')
 const mockContentCatalog = require('./mock-content-catalog.js')
 
+const lunr = require('lunr')
+const lunr2 = require('lunr')
+require("lunr-languages/lunr.stemmer.support")(lunr)
+require('lunr-languages/lunr.multi')(lunr)
+require("lunr-languages/lunr.fr")(lunr)
+
 describe('Generate index', () => {
   it('should generate an empty index when there\'s no page', () => {
     const playbook = {
@@ -221,6 +227,97 @@ describe('Generate index', () => {
     const index = generateIndex(playbook, pages, contentCatalog, env)
     const whatsNewPage = index.store['/antora/1.0/whats-new.html']
     expect(whatsNewPage.title).to.equal('What’s New in Antora')
+  })
+  it('should index `Ils jouaient` as `jou` with DOCSEARCH_LANGS = `fr`', () => {
+    const playbook = {
+      site: {
+        url: 'https://docs.antora.org'
+      }
+    }
+    const pages = [{
+      contents: Buffer.from(`
+      <article class="doc">
+        <h1 class="page">What’s New in Antora</h1>
+        <div id="preamble">
+          <div class="sectionbody">
+            <div class="paragraph">
+              <p>Ils jouaient.</p>
+            </div>
+          </div>
+        </div>
+        <h1 id="antora-2-0-0" class="sect0"><a class="anchor" href="#antora-2-0-0"></a>Antora 2.0.0</h1>
+        <div class="openblock partintro">
+          <div class="content">
+            <div class="paragraph">
+              <p>Ils jouaient</p>
+            </div>
+            <div class="paragraph">
+              <p>Ils jouaient</p>
+            </div>
+          </div>
+        </div>
+      </article>`),
+      src: {
+        component: 'hello',
+        version: '1.0',
+        stem: ''
+      },
+      asciidoc: {},
+      pub: {
+        url: '/antora/1.0/whats-new.html'
+      }
+    }]
+    const contentCatalog = {}
+    const env = { DOCSEARCH_LANGS: 'fr' }
+    const index = generateIndex(playbook, pages, contentCatalog, env)
+    var idx = lunr2.Index.load(index.index.toJSON());
+    expect(idx.search('jou').length).to.equal(1)
+  })
+  it('should index `Ils jouaient` as `jouaient` with DOCSEARCH_LANGS is empty (en)', () => {
+    const playbook = {
+      site: {
+        url: 'https://docs.antora.org'
+      }
+    }
+    const pages = [{
+      contents: Buffer.from(`
+      <article class="doc">
+        <h1 class="page">What’s New in Antora</h1>
+        <div id="preamble">
+          <div class="sectionbody">
+            <div class="paragraph">
+              <p>Ils jouaient.</p>
+            </div>
+          </div>
+        </div>
+        <h1 id="antora-2-0-0" class="sect0"><a class="anchor" href="#antora-2-0-0"></a>Antora 2.0.0</h1>
+        <div class="openblock partintro">
+          <div class="content">
+            <div class="paragraph">
+              <p>Ils jouaient</p>
+            </div>
+            <div class="paragraph">
+              <p>Ils jouaient</p>
+            </div>
+          </div>
+        </div>
+      </article>`),
+      src: {
+        component: 'hello',
+        version: '1.0',
+        stem: ''
+      },
+      asciidoc: {},
+      pub: {
+        url: '/antora/1.0/whats-new.html'
+      }
+    }]
+    const contentCatalog = {}
+    const env = {}
+    const index = generateIndex(playbook, pages, contentCatalog, env)
+
+    var idx = lunr2.Index.load(index.index.toJSON());
+    expect(idx.search('jouaient').length).to.equal(1)
   })
   it('should exclude pages with noindex defined as metadata', () => {
     const playbook = {
