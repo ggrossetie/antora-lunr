@@ -7,10 +7,6 @@ const generateIndex = require('../lib/index')
 const mockContentCatalog = require('./mock-content-catalog.js')
 
 const lunr = require('lunr')
-const lunr2 = require('lunr')
-require("lunr-languages/lunr.stemmer.support")(lunr)
-require('lunr-languages/lunr.multi')(lunr)
-require("lunr-languages/lunr.fr")(lunr)
 
 describe('Generate index', () => {
   it('should generate an empty index when there\'s no page', () => {
@@ -227,97 +223,6 @@ describe('Generate index', () => {
     const index = generateIndex(playbook, pages, contentCatalog, env)
     const whatsNewPage = index.store['/antora/1.0/whats-new.html']
     expect(whatsNewPage.title).to.equal('What’s New in Antora')
-  })
-  it('should index `Ils jouaient` as `jou` with DOCSEARCH_LANGS = `fr`', () => {
-    const playbook = {
-      site: {
-        url: 'https://docs.antora.org'
-      }
-    }
-    const pages = [{
-      contents: Buffer.from(`
-      <article class="doc">
-        <h1 class="page">What’s New in Antora</h1>
-        <div id="preamble">
-          <div class="sectionbody">
-            <div class="paragraph">
-              <p>Ils jouaient.</p>
-            </div>
-          </div>
-        </div>
-        <h1 id="antora-2-0-0" class="sect0"><a class="anchor" href="#antora-2-0-0"></a>Antora 2.0.0</h1>
-        <div class="openblock partintro">
-          <div class="content">
-            <div class="paragraph">
-              <p>Ils jouaient</p>
-            </div>
-            <div class="paragraph">
-              <p>Ils jouaient</p>
-            </div>
-          </div>
-        </div>
-      </article>`),
-      src: {
-        component: 'hello',
-        version: '1.0',
-        stem: ''
-      },
-      asciidoc: {},
-      pub: {
-        url: '/antora/1.0/whats-new.html'
-      }
-    }]
-    const contentCatalog = {}
-    const env = { DOCSEARCH_LANGS: 'fr' }
-    const index = generateIndex(playbook, pages, contentCatalog, env)
-    var idx = lunr2.Index.load(index.index.toJSON());
-    expect(idx.search('jou').length).to.equal(1)
-  })
-  it('should index `Ils jouaient` as `jouaient` with DOCSEARCH_LANGS is empty (en)', () => {
-    const playbook = {
-      site: {
-        url: 'https://docs.antora.org'
-      }
-    }
-    const pages = [{
-      contents: Buffer.from(`
-      <article class="doc">
-        <h1 class="page">What’s New in Antora</h1>
-        <div id="preamble">
-          <div class="sectionbody">
-            <div class="paragraph">
-              <p>Ils jouaient.</p>
-            </div>
-          </div>
-        </div>
-        <h1 id="antora-2-0-0" class="sect0"><a class="anchor" href="#antora-2-0-0"></a>Antora 2.0.0</h1>
-        <div class="openblock partintro">
-          <div class="content">
-            <div class="paragraph">
-              <p>Ils jouaient</p>
-            </div>
-            <div class="paragraph">
-              <p>Ils jouaient</p>
-            </div>
-          </div>
-        </div>
-      </article>`),
-      src: {
-        component: 'hello',
-        version: '1.0',
-        stem: ''
-      },
-      asciidoc: {},
-      pub: {
-        url: '/antora/1.0/whats-new.html'
-      }
-    }]
-    const contentCatalog = {}
-    const env = {}
-    const index = generateIndex(playbook, pages, contentCatalog, env)
-
-    var idx = lunr2.Index.load(index.index.toJSON());
-    expect(idx.search('jouaient').length).to.equal(1)
   })
   it('should exclude pages with noindex defined as metadata', () => {
     const playbook = {
@@ -672,6 +577,130 @@ describe('Generate index', () => {
       const env = {}
       const index = generateIndex(playbook, pages, contentCatalog, env)
       expect(index.store['/component-a/install-foo'].url).to.equal('/component-a/install-foo')
+    })
+  })
+  describe('Languages', () => {
+    const frenchArticleWithGermanQuoteContent = `
+      <article class="doc">
+        <h1 class="page">Quoi de neuf dans Antora ?</h1>
+        <div id="preamble">
+          <div class="sectionbody">
+            <div class="paragraph">
+              <p>Des nouveautés à foison !</p>
+            </div>
+          </div>
+        </div>
+        <h1 id="antora-2-0-0" class="sect0"><a class="anchor" href="#antora-2-0-0"></a>Antora 2.0.0</h1>
+        <div class="openblock partintro">
+          <div class="content">
+            <div class="paragraph">
+              <p>Il est maintenant possible de configurer la position des ancres de sections.</p>
+              <p>Auparavant, des anomalies empêchaient d'utiliser la macro <code>xref</code>.</p>
+              <p>L'installation d'Antora est désormais plus simple.</p>
+              <p>Comme on dit en Allemand :</p>
+              <blockquote>Ich heiße Guillaume und ich mage Gemüse</blockquote>
+            </div>
+          </div>
+        </div>
+      </article>`
+    it('should apply the French stemmer and stopword when DOCSEARCH_LANGS = `fr`', () => {
+      const playbook = {
+        site: {
+          url: 'https://docs.antora.org'
+        }
+      }
+      const pages = [{
+        contents: Buffer.from(frenchArticleWithGermanQuoteContent),
+        src: {
+          component: 'hello',
+          version: '1.0',
+          stem: ''
+        },
+        asciidoc: {},
+        pub: {
+          url: '/antora/1.0/whats-new.html'
+        }
+      }]
+      const contentCatalog = {}
+      const env = { DOCSEARCH_LANGS: 'fr' }
+      const index = generateIndex(playbook, pages, contentCatalog, env)
+
+      const idx = lunr.Index.load(index.index.toJSON())
+
+      // REMIND: arguably, "empeche" should also returns a result but Lunr languages does not currently replace the accented letter "ê" by "e".
+      // https://github.com/MihaiValentin/lunr-languages/issues/68
+      // french
+      expect(idx.search('empêche').length, '"empêche" should match because the verb "empêcher" is present').to.equal(1)
+      expect(idx.search('nouveaute').length, '"nouveaute" should match because the word `nouveautés` is present').to.equal(1)
+      // make sure that missing words are not found
+      expect(idx.search('feature').length, '"feature" should not match because the word is absent').to.equal(0)
+      expect(idx.search('fonctionnalité').length, '"fonctionnalité" should not match because the word is absent').to.equal(0)
+      // german (not enabled)
+      expect(idx.search('heiße').length, '"heiße" should match because the word `heiße` is present').to.equal(1)
+      expect(idx.search('heisse').length, '"heisse" should not match because the word `heisse` is absent and the German stemmer is not enabled').to.equal(0)
+      expect(idx.search('gemuse').length, '"gemuse" should not match because the word `gemuse` is absent and the German stemmer is not enabled').to.equal(0)
+    })
+    it('should apply multiple stemmers and stopwords when DOCSEARCH_LANGS = "fr,de"', () => {
+      const playbook = {
+        site: {
+          url: 'https://docs.antora.org'
+        }
+      }
+      const pages = [{
+        contents: Buffer.from(frenchArticleWithGermanQuoteContent),
+        src: {
+          component: 'hello',
+          version: '1.0',
+          stem: ''
+        },
+        asciidoc: {},
+        pub: {
+          url: '/antora/1.0/whats-new.html'
+        }
+      }]
+      const contentCatalog = {}
+      const env = { DOCSEARCH_LANGS: 'fr,de' }
+      const index = generateIndex(playbook, pages, contentCatalog, env)
+
+      const idx = lunr.Index.load(index.index.toJSON())
+      // french
+      expect(idx.search('empêche').length, '"empêche" should match because the verb "empêcher" is present').to.equal(1)
+      expect(idx.search('nouveaute').length, '"nouveaute" should match because the word `nouveautés` is present').to.equal(1)
+      // make sure that missing words are not found
+      expect(idx.search('feature').length, '"feature" should not match because the word is absent').to.equal(0)
+      expect(idx.search('fonctionnalité').length, '"fonctionnalité" should not match because the word is absent').to.equal(0)
+      // german
+      expect(idx.search('heiße').length, '"heiße" should match because the word `heiße` is present').to.equal(1)
+      expect(idx.search('heisse').length, '"heisse" should match because the word `heiße` is present and the German stemmer is enabled').to.equal(1)
+      expect(idx.search('gemuse').length, '"gemuse" should match because the word `Gemüse` is present and the German stemmer is enabled').to.equal(1)
+    })
+    it('should apply the default (English) stemmer and stopword when DOCSEARCH_LANGS is empty (en)', () => {
+      const playbook = {
+        site: {
+          url: 'https://docs.antora.org'
+        }
+      }
+      const pages = [{
+        contents: Buffer.from(frenchArticleWithGermanQuoteContent),
+        src: {
+          component: 'hello',
+          version: '1.0',
+          stem: ''
+        },
+        asciidoc: {},
+        pub: {
+          url: '/antora/1.0/whats-new.html'
+        }
+      }]
+      const contentCatalog = {}
+      const env = {}
+      const index = generateIndex(playbook, pages, contentCatalog, env)
+
+      const idx = lunr.Index.load(index.index.toJSON())
+      expect(idx.search('empeche').length, '"empeche" should not match any document because "empêchaient" should be indexed as "empêchaient"').to.equal(0)
+      expect(idx.search('nouveaute').length, '"nouveaute" should not match any document because "nouveautés" should be indexed as "nouveautés"').to.equal(0)
+      expect(idx.search('empêchaient').length).to.equal(1)
+      expect(idx.search('nouveautés').length).to.equal(1)
     })
   })
 })
