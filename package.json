@@ -36,6 +36,6 @@
     "dirty-chai": "^2.0.1",
     "js-yaml": ">=3.13.1",
     "mocha": "^8.0.1",
-    "standard": "^15.0.0"
+    "standard": "^16.0.2"
   }
 }
