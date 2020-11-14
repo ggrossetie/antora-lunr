@@ -116,8 +116,8 @@ $ DOCSEARCH_ENABLED=true DOCSEARCH_ENGINE=lunr DOCSEARCH_INDEX_VERSION=latest an
 
 #### Support for other languages
 
-By default lunr support only english language.
-You can add support for the following other languages :
+By default, Lunr support only English language.
+You can add support for the following other languages:
 
 * ![](https://raw.githubusercontent.com/madebybowtie/FlagKit/master/Assets/PNG/IQ.png) Arabic (ar)
 * ![](https://raw.githubusercontent.com/madebybowtie/FlagKit/master/Assets/PNG/DK.png) Danish (da)
@@ -138,7 +138,7 @@ You can add support for the following other languages :
 * ![](https://raw.githubusercontent.com/madebybowtie/FlagKit/master/Assets/PNG/TR.png) Turkish (tr)
 * ![](https://raw.githubusercontent.com/madebybowtie/FlagKit/master/Assets/PNG/VN.png) Vietnamese (vi)
 
-For use one or more languages, set the following environment variable with all desired language code (comma separated):
+To use one or more languages, set the `DOCSEARCH_LANGS` environment variable with all desired language codes (comma separated):
 
 * `DOCSEARCH_LANGS=en,fr`
 
