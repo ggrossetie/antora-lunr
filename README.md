@@ -1,6 +1,6 @@
 # Integration of Lunr in Antora
 
-[![Build Status](https://travis-ci.org/Mogztter/antora-lunr.svg?branch=master)](https://travis-ci.org/Mogztter/antora-lunr)
+[![Build Status](https://github.com/Mogztter/antora-lunr/workflows/Build/badge.svg)](https://github.com/Mogztter/antora-lunr/actions?query=workflow%3ABuild)
 [![npm](https://img.shields.io/npm/v/antora-lunr.svg)](https://www.npmjs.org/package/antora-lunr)
 
 [Lunr](https://lunrjs.com/) provides a great search experience without the need for external, server-side, search services.
