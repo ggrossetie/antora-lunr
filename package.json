@@ -28,7 +28,7 @@
   ],
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
-    "html-entities": "^1.2.1",
+    "html-entities": "^2.3.2",
     "lunr": "2.3.8",
     "lunr-languages": "^1.4.0"
   },
