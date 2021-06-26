@@ -157,3 +157,12 @@ $ DOCSEARCH_ENABLED=true DOCSEARCH_ENGINE=lunr DOCSEARCH_LANGS=en,fr antora site
 ### Testing this module
 
 In the root of the repository, run `npm t`.
+
+## Who's using it
+
+Here's a list of projects who are using Antora Lunr.   
+To add your project to this list, please [edit this page](https://github.com/Mogztter/antora-lunr/edit/main/README.md)!
+
+- [Uyuni Documentation](https://www.uyuni-project.org/uyuni-docs/)
+- [SUSE Manager Documentation](https://documentation.suse.com/external-tree/en-us/suma/4.0/suse-manager/index.html)
+- [Commodore Components Hub (VSHN)](https://hub.syn.tools/hub/index.html)
