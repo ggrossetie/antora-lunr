@@ -201,6 +201,13 @@ window.antoraLunr = (function (lunr) {
     }, 100)
     searchInput.addEventListener('keydown', search)
 
+    searchInput.addEventListener('keydown', function(event) {
+      const key = event.key;
+      if (key === 'Escape') {
+        searchInput.value = ''
+      }
+    })
+
     // this is prevented in case of mousedown attached to SearchResultItem
     searchInput.addEventListener('blur', function (e) {
       while (searchResult.firstChild) {
