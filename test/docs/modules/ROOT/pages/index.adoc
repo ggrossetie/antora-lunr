@@ -1,0 +1,4 @@
+= Antora x Lunr
+
+This site generator is a copy of the default site generator that in addition produces a Lunr index that can be used in your documentation UI.
+Lunr provides a great search experience in your documentation site without the need for external, server-side, search services.

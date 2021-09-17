@@ -1,0 +1,22 @@
+---
+runtime:
+  cache_dir: ./.cache/antora
+site:
+  title: Antora x Lunr Documentation
+  url: https://docs.antora-lunr.io
+  start_page: antora-lunr::index.adoc
+pipeline:
+  extensions:
+    - require: ./../../lib/index.js
+content:
+  sources:
+    - url: ./../..
+      branches: HEAD
+      start_path: test/docs
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+  supplemental_files: ./../../supplemental_ui
+output:
+  dir: ./public

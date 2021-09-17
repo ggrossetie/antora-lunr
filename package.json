@@ -33,6 +33,7 @@
     "lunr-languages": "^1.4.0"
   },
   "devDependencies": {
+    "@antora/site-generator-default": "^3.0.0-alpha.9",
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
     "js-yaml": ">=3.13.1",
