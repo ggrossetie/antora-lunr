@@ -8,7 +8,7 @@
  *  see https://gitlab.com/antora/antora/-/blob/master/test/mock-content-catalog.js
  *  Copyright © 2017-2020 by OpenDevise Inc. and the individual contributors to Antora. */
 
-function mockContentCatalog (seed = []) {
+function mockContentCatalog (seed = [], pages = []) {
   if (!Array.isArray(seed)) seed = [seed]
   const components = {}
   seed.forEach(({ component, version, module: module_, family }) => {
@@ -31,7 +31,8 @@ function mockContentCatalog (seed = []) {
     getComponent: (name) => components[name],
     getComponents: () => Object.values(components),
     getComponentVersion: (component, version) =>
-      (typeof component === 'string' ? components[component] : component).versions.find((it) => it.version === version)
+      (typeof component === 'string' ? components[component] : component).versions.find((it) => it.version === version),
+    getPages: () => pages
   }
 }
 
