@@ -1,3 +1,14 @@
+[antora-org]: https://www.gitlab.com/antora
+[new-repository]: https://gitlab.com/antora/antora-lunr-extension
+
+### :warning: **IMPORTANT** :warning:
+
+This repository is no longer maintained and has been archived: this project is now an official part of [the Antora project][antora-org], and [the repository has been moved to its new home][new-repository]. 
+
+You'll also find [support for Antora 3 in the new project][new-repository]. :rocket: This code in this repository is only usable for Antora 2.3.4 or older. 
+
+---
+
 # Integration of Lunr in Antora
 
 [![Build Status](https://github.com/Mogztter/antora-lunr/workflows/Build/badge.svg?branch=master)](https://github.com/Mogztter/antora-lunr/actions?query=workflow%3ABuild)
@@ -5,6 +16,7 @@
 
 [Lunr](https://lunrjs.com/) provides a great search experience without the need for external, server-side, search services.
 It makes it possible to add an *offline* search engine in your Antora's documentation site.
+
 
 ## Usage
 
