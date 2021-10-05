@@ -1,11 +1,12 @@
 [antora-org]: https://www.gitlab.com/antora
 [new-repository]: https://gitlab.com/antora/antora-lunr-extension
 
-### :warning: **IMPORTANT** :warning:
+### :information_source: **Information** :information_source:
 
-This repository is no longer maintained and has been archived: this project is now an official part of [the Antora project][antora-org], and [the repository has been moved to its new home][new-repository]. 
+The next major version of this project will be based on the [pipeline extension feature](https://docs.antora.org/antora/3.0/extend/pipeline/) (introduced in Antora 3) and become an official extension of [the Antora project][antora-org].
+As a result, [the repository has been moved to its new home][new-repository].
 
-You'll also find [support for Antora 3 in the new project][new-repository]. :rocket: This code in this repository is only usable for Antora 2.3.4 or older. 
+If you are preparing to migrate to Antora 3, then you should be testing the extension instead of the integration in this repository. Once Antora 3 is released, this repository will go into maintenance mode for users who have not yet transitioned from Antora 2 to Antora 3. After some time, the repository will be archived.
 
 ---
 
