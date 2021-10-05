@@ -1,3 +1,15 @@
+[antora-org]: https://www.gitlab.com/antora
+[new-repository]: https://gitlab.com/antora/antora-lunr-extension
+
+### :information_source: **Information** :information_source:
+
+The next major version of this project will be based on the [pipeline extension feature](https://docs.antora.org/antora/3.0/extend/pipeline/) (introduced in Antora 3) and become an official extension of [the Antora project][antora-org].
+As a result, [the repository has been moved to its new home][new-repository].
+
+If you are preparing to migrate to Antora 3, then you should be testing the extension instead of the integration in this repository. Once Antora 3 is released, this repository will go into maintenance mode for users who have not yet transitioned from Antora 2 to Antora 3. After some time, the repository will be archived.
+
+---
+
 # Integration of Lunr in Antora
 
 [![Build Status](https://github.com/Mogztter/antora-lunr/workflows/Build/badge.svg?branch=master)](https://github.com/Mogztter/antora-lunr/actions?query=workflow%3ABuild)
@@ -5,6 +17,7 @@
 
 [Lunr](https://lunrjs.com/) provides a great search experience without the need for external, server-side, search services.
 It makes it possible to add an *offline* search engine in your Antora's documentation site.
+
 
 ## Usage
 
