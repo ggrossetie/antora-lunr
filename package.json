@@ -1,6 +1,6 @@
 {
-  "name": "antora-lunr",
-  "version": "0.8.0",
+  "name": "antora-eui-lunr",
+  "version": "0.0.1",
   "description": "Generate a Lunr index from a catalog.",
   "license": "MIT",
   "author": "Guillaume Grossetie <g.grossetie@gmail.com>",
